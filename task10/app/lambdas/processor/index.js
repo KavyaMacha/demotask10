@@ -2,9 +2,11 @@ const AWS = require("aws-sdk");
 const axios = require("axios");
 const { v4: uuidv4 } = require("uuid");
 
-
+// Initialize DynamoDB client
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
-const TABLE_NAME = process.env.TARGET_TABLE || "Weather";
+const TABLE_NAME = process.env.TARGET_TABLE || "Weather"; // Ensure this is set correctly
+
+// Fetch weather data from Open-Meteo
 async function fetchWeather() {
     const url = "https://api.open-meteo.com/v1/forecast?latitude=50.4375&longitude=30.5&hourly=temperature_2m";
 
@@ -18,14 +20,15 @@ async function fetchWeather() {
     }
 }
 
+// Lambda function handler
 exports.handler = async (event) => {
     try {
         console.log("Received event:", JSON.stringify(event, null, 2));
 
-
+        // Fetch the latest weather data
         const weatherData = await fetchWeather();
 
-
+        // Prepare the item to store in DynamoDB
         const item = {
             id: uuidv4(),
             forecast: {
@@ -42,6 +45,8 @@ exports.handler = async (event) => {
         };
 
         console.log("Saving item to DynamoDB:", JSON.stringify(item, null, 2));
+
+        // Store the item in DynamoDB
         await dynamoDB.put({
             TableName: TABLE_NAME,
             Item: item
