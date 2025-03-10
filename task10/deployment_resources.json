@@ -14,9 +14,7 @@
             "dynamodb:DeleteItem",
             "ssm:PutParameter",
             "ssm:GetParameter",
-            "kms:Decrypt",
-            "xray:PutTraceSegments",
-            "xray:PutTelemetryRecords"
+            "kms:Decrypt"
           ],
           "Effect": "Allow",
           "Resource": "*"
@@ -25,16 +23,6 @@
       "Version": "2012-10-17"
     },
     "resource_type": "iam_policy",
-    "tags": {}
-  },
-  "${target_table}": {
-    "resource_type": "dynamodb_table",
-    "hash_key_name": "id",
-    "hash_key_type": "S",
-    "read_capacity": 1,
-    "write_capacity": 1,
-    "global_indexes": [],
-    "autoscaling": [],
     "tags": {}
   }
 }
